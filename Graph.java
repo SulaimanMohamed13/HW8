@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   SULAIMAN MOHAMED / 400C 001
  *
  *   Note, additional comments provided throughout this source code
  *   is for educational purposes
@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-
 /**
  *  Graph traversal exercise
  *
@@ -21,10 +20,10 @@ import java.util.List;
 
 public class Graph {
   int numVertices;                  // vertices in graph
-  LinkedList<Integer>[] adjListArr; // Adjacency list
+  LinkedList[] adjListArr; // Adjacency list
   List<Integer> vertexValues;       // vertex values
 
-  // Constructor 
+  // Constructor
   public Graph(int numV) {
     numVertices = numV;
     adjListArr = new LinkedList[numVertices];
@@ -38,19 +37,17 @@ public class Graph {
 
   /*
    * method setValue
-   * 
+   *
    * Sets a vertex's (node's) value.
-   */ 
-  
+   */
   public void setValue(int vertexIndex, int value) {
     if (vertexIndex >= 0 && vertexIndex < numVertices) {
       vertexValues.set(vertexIndex, value);
     } else {
       throw new IllegalArgumentException(
-             "Invalid vertex index: " + vertexIndex);
+              "Invalid vertex index: " + vertexIndex);
     }
   }
-
 
   public void addEdge(int src, int dest) {
     adjListArr[src].add(dest);
@@ -58,18 +55,17 @@ public class Graph {
 
   /*
    * method printGraph
-   * 
+   *
    * Prints the graph as an adjacency matrix
-   */ 
-  
+   */
   public void printGraph() {
     System.out.println(
-         "\nAdjacency Matrix Representation:\n");
+            "\nAdjacency Matrix Representation:\n");
     int[][] matrix = new int[numVertices][numVertices];
 
     for (int i = 0; i < numVertices; i++) {
-      for (Integer dest : adjListArr[i]) {
-        matrix[i][dest] = 1;
+      for (Object dest : adjListArr[i]) {
+        matrix[i][(int) dest] = 1;
       }
     }
 
@@ -92,19 +88,32 @@ public class Graph {
     }
   }
 
-
   /**
    * method findRoot
    *
    * This method returns the value of the root vertex, where root is defined in
    * this case as a node that has no incoming edges. If no root vertex is found
    * and/or more than one root vertex, then return -1.
-   * 
    */
-  
   public int findRoot() {
+    int[] inDegree = new int[numVertices];
 
-    // ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME/SECTION AT TOP OF FILE
-    return -1;
-  } 
+    // Count incoming edges for each vertex
+    for (int i = 0; i < numVertices; i++) {
+      for (Object neighbor : adjListArr[i]) {
+        inDegree[(int) neighbor]++;
+      }
+    }
+
+    int root = -1; // Variable to store the root vertex
+    for (int i = 0; i < numVertices; i++) {
+      if (inDegree[i] == 0) { // Check for vertices with no incoming edges
+        if (root != -1) { // If we already found a root
+          return -1; // More than one root found
+        }
+        root = i; // Set the current vertex as root
+      }
+    }
+    return root == -1 ? -1 : vertexValues.get(root); // Return the value of the root or -1 if none found
+  }
 }
